@@ -27,5 +27,6 @@ Thumbs.db
 dist/
 build/
 
-# Optional: if you generate slides or notebooks output
-output/
+# Uploads and extracted project files
+uploads/
+extracted/
