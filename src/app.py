@@ -13,7 +13,8 @@ from config import MAX_UPLOAD_SIZE
 
 app = Flask(
     __name__,
-    template_folder="../frontend/templates"
+    template_folder="../frontend/templates",
+    static_folder="../frontend/static" 
 )
 
 app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_SIZE
