@@ -1,10 +1,4 @@
-flask    
-jinja2                 
-openai
-nbformat
-matplotlib
-pandas
-numpy
-graphviz
-python-pptx
-pyyaml
+flask
+gunicorn
+pytest
+werkzeug
