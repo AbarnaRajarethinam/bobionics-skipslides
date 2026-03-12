@@ -6,13 +6,80 @@
 
 ### **Current Features**
 
-**1. Upload System**
-Users can upload their project files as a **ZIP** or folder. The system extracts the files and prepares them for analysis.
+#### **1. Upload System**
+
+Users can upload their project files as a **ZIP archive**. The system stores and extracts the repository so it can be analyzed.
 
 * **Accepted formats:** `.zip`
-* **Automatic extraction:** The system scans the uploaded directory and organizes files for further processing.
-* **File filtering:** Ignores irrelevant directories like `venv`, `node_modules`, etc.
-* **Output:** Extracted files are stored in **`extracted/`**, and temporary uploads are stored in **`uploads/`**.
+* **Automatic extraction:** Uploaded archives are extracted into a unique project directory.
+* **File filtering:** Irrelevant directories such as `venv`, `node_modules`, and other dependency folders are ignored during scanning.
+* **Output locations:**
+
+  * Uploaded files are temporarily stored in **`uploads/`**
+  * Extracted repositories are stored in **`extracted/`**
+
+This prepares the project files for repository analysis.
+
+---
+
+#### **2. Repository Analysis**
+
+After extraction, the system scans the uploaded repository to identify the **most relevant project files**.
+
+Each file is assigned a **relevance score** based on several signals:
+
+* **Documentation files** (`README.md`)
+* **Entry points** (`main.py`, `app.py`, `run.py`, `server.py`)
+* **Machine learning indicators** (`model`, `train`, `predict`, `inference`)
+* **Dependency and configuration files** (`requirements.txt`, `environment.yml`, `package.json`)
+* **File types** (`.ipynb`, `.py`, `.js`, `.ts`)
+* **Repository structure signals** (files located in `src/`, `model/`, `training/`, or the project root)
+
+The scanner then ranks the files and selects the **Top N most relevant files** for further processing.
+
+To improve performance when scanning large repositories, common dependency directories are ignored, including:
+
+```
+node_modules
+venv
+__pycache__
+.git
+dist
+build
+coverage
+.next
+```
+
+---
+
+#### **3. Important File Extraction**
+
+Once the most relevant files are identified, the system reads their **full contents** and prepares them in a structured format.
+
+Example output:
+
+```
+[
+  {
+    "filename": "README.md",
+    "content": "full file contents..."
+  },
+  {
+    "filename": "main.py",
+    "content": "full file contents..."
+  }
+]
+```
+
+This structured data is returned by the `/upload` endpoint and will later be used by the **AI slide generation pipeline**.
+
+For development purposes, the backend also prints **debug information in the terminal**, including:
+
+* file scores
+* selected top files
+* short previews of file contents
+
+This allows developers to understand how the repository analysis system prioritizes files.
 
 *Future updates* will include **automatic recognition of main project files**, **AI-powered summarization**, and **slide generation**.
 
