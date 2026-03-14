@@ -13,10 +13,11 @@ Users can upload their project files as a **ZIP archive**. The system stores and
 * **Accepted formats:** `.zip`
 * **Automatic extraction:** Uploaded archives are extracted into a unique project directory.
 * **File filtering:** Irrelevant directories such as `venv`, `node_modules`, and other dependency folders are ignored during scanning.
-* **Output locations:**
 
-  * Uploaded files are temporarily stored in **`uploads/`**
-  * Extracted repositories are stored in **`extracted/`**
+**Output locations:**
+
+* Uploaded files are temporarily stored in **`uploads/`**
+* Extracted repositories are stored in **`extracted/`**
 
 This prepares the project files for repository analysis.
 
@@ -35,7 +36,7 @@ Each file is assigned a **relevance score** based on several signals:
 * **File types** (`.ipynb`, `.py`, `.js`, `.ts`)
 * **Repository structure signals** (files located in `src/`, `model/`, `training/`, or the project root)
 
-The scanner then ranks the files and selects the **Top N most relevant files** for further processing.
+The scanner ranks all files and selects the **Top N most relevant files** for further processing.
 
 To improve performance when scanning large repositories, common dependency directories are ignored, including:
 
@@ -54,7 +55,7 @@ coverage
 
 #### **3. Important File Extraction**
 
-Once the most relevant files are identified, the system reads their **full contents** and prepares them in a structured format.
+Once the most relevant files are identified, the system reads their **contents** and prepares them in a structured format for AI processing.
 
 Example output:
 
@@ -71,17 +72,66 @@ Example output:
 ]
 ```
 
-This structured data is returned by the `/upload` endpoint and will later be used by the **AI slide generation pipeline**.
+This structured data is returned by the `/upload` endpoint and serves as the input for the **AI repository analysis system**.
 
-For development purposes, the backend also prints **debug information in the terminal**, including:
+For development purposes, the backend prints **debug information in the terminal**, including:
 
-* file scores
+* file relevance scores
 * selected top files
 * short previews of file contents
 
-This allows developers to understand how the repository analysis system prioritizes files.
+This helps developers understand how the repository analysis system prioritizes files.
 
-*Future updates* will include **automatic recognition of main project files**, **AI-powered summarization**, and **slide generation**.
+---
+
+#### **4. AI Repository Analysis**
+
+After the important files are extracted, the system uses an **AI-powered repository analyzer** to understand the project and generate a structured technical explanation.
+
+The analyzer sends the selected repository files to an AI model, which produces a **slide-ready explanation of the codebase**.
+
+The AI analysis includes:
+
+* **Project Overview**
+  What the project does and the problem it solves.
+
+* **Key Features**
+  The main capabilities or functionalities of the system.
+
+* **Technologies & Tools**
+  Programming languages, frameworks, libraries, and tools used.
+
+* **Main Components**
+  Important modules and files with explanations of their responsibilities.
+
+* **System Architecture**
+  How different parts of the application interact.
+
+* **Application Workflow**
+  Step-by-step description of how the system operates.
+
+* **Code Examples**
+  Key code snippets extracted from the repository to highlight important logic.
+
+* **Real-World Use Cases**
+  Scenarios where the system could be used.
+
+The AI-generated explanation is designed to be **directly convertible into technical presentation slides** for coding students and developers.
+
+For development and debugging purposes, the generated explanation is also **printed in the backend terminal**, allowing developers to inspect the AI output during testing.
+
+---
+
+### **Future Improvements**
+
+Planned updates to the system include:
+
+* Automatic detection of **primary application entry points**
+* Improved **AI-powered repository understanding**
+* Automatic **slide generation from AI analysis**
+* Support for additional project formats and repository structures
+* Visual **system architecture diagram generation**
+
 
 ---
 
