@@ -36,101 +36,119 @@ def build_prompt(files):
         file_text += content[:MAX_FILE_CHARS]
 
     prompt = f"""
-You are a senior software engineer analyzing a GitHub repository.
+    You are a senior software engineer preparing presentation slides to explain a GitHub repository to technical students.
 
-The repository could be ANY type of software project, including:
-- algorithm / data structures projects
-- AI / machine learning systems
-- deep learning models (CNN, GAN, transformers)
-- data science or data visualization
-- web applications (frontend/backend)
-- APIs or microservices
-- CLI tools or automation scripts
-- research prototypes
+    Your task is to analyze the repository and produce a structured explanation that can be directly converted into presentation slides.
 
-Your task is to analyze the repository and produce a clear,
-structured explanation that could be directly converted into
-presentation slides for technical students.
+    IMPORTANT RULES:
+    - Use bullet points only.
+    - Avoid long paragraphs.
+    - Each slide must contain at least 4 bullet points but no more than 6.
+    - Each bullet point must be under 20 words.
+    - Focus on explaining architecture, workflow, and components.
+    - Do not invent functionality that is not present in the repository.
+    - Only analyze the files that are provided.
+    - If information cannot be determined, output: "Not clearly defined in repository."
 
-Guidelines:
-- Use concise bullet points
-- Avoid long paragraphs
-- Focus on explaining how the system works
-- Adapt explanation depending on project type
+    FILE CONTENT NOTE:
+    Repository file contents may be truncated to fit analysis limits.
+    If content appears incomplete, summarize only what is visible and do not guess missing functionality.
 
-Return the explanation using this structure:
+    CODE EXAMPLE RULES:
+    - Provide 2–3 short code snippets (maximum 10 lines each).
+    - Only use snippets from the provided repository files.
+    - Do not invent or fabricate code.
+    - If no meaningful snippet exists, state: "No clear code example identified."
 
-1. Project Overview
-• What the project does
-• What problem it solves
-• What type of system it is (ML model, web app, CLI tool, etc.)
+    OUTPUT FORMAT REQUIREMENT:
+    Each section must start with a slide tag in the exact format:
 
-2. Key Features
-List the most important capabilities or functionalities.
+    [SLIDE: Slide Title]
 
-3. Technologies & Tools
-Identify major technologies used such as:
-• programming languages
-• frameworks
-• ML libraries
-• visualization tools
-• databases or APIs
+    Example:
+    [SLIDE: Problem Statement]
+    • bullet point
+    • bullet point
+    • bullet point
+    • bullet point
 
-4. Main Components
-List the important files/modules and explain their responsibilities.
+    These tags will be used by an automated slide generation system.
 
-Example format:
-- main.py → entry point that launches the application
-- model.py → defines machine learning model
-- server.js → backend API server
-- visualizer.py → generates charts
+    Return the explanation using the following slide structure:
 
-5. System Architecture
-Explain how the components interact and how the system is structured.
+    [SLIDE: Problem Statement]
+    • What real-world or technical problem this project solves
+    • Why the problem is important
 
-6. Application Workflow
-Describe the step-by-step flow of how the program works.
+    [SLIDE: Project Overview]
+    • What the system does
+    • Type of system (ML model, web app, CLI tool, etc.)
 
-Examples depending on project type:
+    [SLIDE: Key Features]
+    • List the most important capabilities
 
-Example (ML pipeline):
-1. Load dataset
-2. Preprocess data
-3. Train model
-4. Evaluate performance
-5. Output predictions
+    [SLIDE: Technologies & Tools]
+    • Programming languages used
+    • Frameworks
+    • Libraries
+    • APIs or databases
 
-Example (web application):
-1. User sends request
-2. Backend API processes request
-3. Database query executed
-4. Response returned to client
+    [SLIDE: System Modules]
+    Explain the major components and their responsibilities.
 
-Example (algorithmic tool):
-1. User inputs data
-2. Algorithm processes input
-3. Results computed
-4. Output displayed
+    Example format:
+    • main.py → entry point
+    • model.py → machine learning model
+    • server.js → backend API server
 
-7. Important Code Examples
-Select 2–3 short but meaningful code snippets that represent key logic.
-Keep snippets under 10 lines.
+    [SLIDE: Data / Processing Pipeline]
+    Explain the step-by-step process of how the system works.
 
-Format:
+    Examples depending on project type:
 
-Code Example: <description>
+    Machine Learning:
+    • Load dataset
+    • Preprocess data
+    • Train model
+    • Evaluate performance
+    • Output predictions
 
-<code snippet>
+    Web Application:
+    • User sends request
+    • Backend processes request
+    • Database query executed
+    • Response returned to user
 
-8. Real-World Use Cases
-Explain who would use this system and in what scenarios.
+    [SLIDE: System Architecture]
+    Explain how modules interact and how the system is structured.
 
-Repository files:
-{file_text}
-"""
+    [SLIDE: Deployment & Execution]
+    Explain how the system is run or deployed.
+
+    Examples:
+    • Run using Python script
+    • Backend server deployment
+    • Docker container
+    • Cloud deployment
+    • Local execution
+
+    [SLIDE: Key Code Examples]
+    Provide 2–3 short but meaningful code snippets (maximum 10 lines each).
+
+    Format:
+
+    Code Example: <description>
+
+    <code snippet>
+
+    [SLIDE: Real World Applications]
+    Explain who would use this system and in what scenarios.
+
+    Repository files:
+    {file_text}
+    """
 
     return prompt
-
 
 # ------------------------------
 # Analyze repository using LLM
