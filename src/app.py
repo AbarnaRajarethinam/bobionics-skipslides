@@ -8,6 +8,8 @@ from upload_handler import (
 )
 
 from repo_analyzer import scan_repository, extract_file_contents
+from ai_analyzer import analyze_repository
+
 from config import MAX_UPLOAD_SIZE
 
 app = Flask(
@@ -47,15 +49,21 @@ def upload():
         # Scan repository and select top files
         files = scan_repository(project_path)
 
-        # Extract file contents and structure for AI
+        # Extract file contents
         file_contents = extract_file_contents(files)
 
-        print(f"[App] Upload processing complete. {len(file_contents)} files selected.")
+        print(f"[App] {len(file_contents)} files prepared for AI analysis")
+
+        # AI ANALYSIS STEP
+        explanation = analyze_repository(file_contents)
+
+        print("[App] AI analysis completed")
 
         return jsonify({
             "message": "Upload successful",
             "project_path": project_path,
-            "files": file_contents
+            "files": file_contents,
+            "ai_explanation": explanation
         })
 
     except Exception as e:
