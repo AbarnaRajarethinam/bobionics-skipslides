@@ -4,3 +4,4 @@ pytest
 werkzeug
 openai>=1.0.0
 python-dotenv
+python-pptx

@@ -30,3 +30,6 @@ build/
 # Uploads and extracted project files
 uploads/
 extracted/
+
+# slides generated
+generated_slides/

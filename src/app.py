@@ -1,5 +1,6 @@
 import os
 from flask import Flask, request, jsonify, render_template
+from slide_generator import create_slides_from_ai
 
 from upload_handler import (
     save_uploaded_file,
@@ -59,11 +60,17 @@ def upload():
 
         print("[App] AI analysis completed")
 
+        # Generate PowerPoint slides
+        slides_path = create_slides_from_ai(explanation)
+
+        print(f"[App] Slides generated at: {slides_path}")
+
         return jsonify({
             "message": "Upload successful",
             "project_path": project_path,
             "files": file_contents,
-            "ai_explanation": explanation
+            "ai_explanation": explanation,
+            "slides_file": slides_path
         })
 
     except Exception as e:
