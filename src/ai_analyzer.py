@@ -35,127 +35,134 @@ def build_prompt(files):
         file_text += "\n\n===== FILE: " + filename + " =====\n"
         file_text += content[:MAX_FILE_CHARS]
 
-    prompt = f"""
-    You are a senior software engineer preparing presentation slides to explain a GitHub repository to technical students.
+    prompt =  f"""
+You are a senior software engineer preparing presentation slides explaining a software repository to technical students.
 
-    Your task is to analyze the repository and produce a structured explanation that can be directly converted into presentation slides.
+Your task is to analyze the repository and generate structured slide content.
 
-    IMPORTANT RULES:
-    - Use bullet points only.
-    - Avoid long paragraphs.
-    - Each slide must contain at least 4 bullet points but no more than 6.
-    - Each bullet point must be under 20 words.
-    - Focus on explaining architecture, workflow, and components.
-    - Do not invent functionality that is not present in the repository.
-    - Only analyze the files that are provided.
-    - If information cannot be determined, output: "Not clearly defined in repository."
+GENERAL GUIDELINES
+- Use bullet points only.
+- Avoid long paragraphs.
+- Prefer 3–5 bullet points per slide.
+- Keep bullets concise and technical.
+- Focus on architecture, workflow, features, and implementation.
+- Only describe functionality visible in the provided files.
+- If information cannot be determined, write: "Not clearly defined in repository."
+- Avoid repeating the same information across slides.
 
-    FILE CONTENT NOTE:
-    Repository file contents may be truncated to fit analysis limits.
-    If content appears incomplete, summarize only what is visible and do not guess missing functionality.
+OUTPUT FORMAT
 
-    CODE EXAMPLE RULES:
-    - Provide 2–3 short code snippets (maximum 10 lines each).
-    - Only use snippets from the provided repository files.
-    - Do not invent or fabricate code.
-    - If no meaningful snippet exists, state: "No clear code example identified."
+Each slide must begin with a tag exactly like this:
 
-    OUTPUT FORMAT REQUIREMENT:
-    Each section must start with a slide tag in the exact format:
+[SLIDE: Slide Title]
 
-    [SLIDE: Slide Title]
+Example:
 
-    Example:
-    [SLIDE: Problem Statement]
-    • bullet point
-    • bullet point
-    • bullet point
-    • bullet point
+[SLIDE: Project Overview]
+• bullet
+• bullet
+• bullet
 
-    These tags will be used by an automated slide generation system.
+These tags are used by an automated slide generator.
 
-    Return the explanation using the following slide structure:
+OPTIONAL SECTIONS
 
-    [SLIDE: Problem Statement]
-    • What real-world or technical problem this project solves
-    • Why the problem is important
+You may include the following sections when appropriate.
 
-    [SLIDE: Project Overview]
-    • What the system does
-    • Type of system (ML model, web app, CLI tool, etc.)
+CODE SNIPPET FORMAT
 
-    [SLIDE: Key Features]
-    • List the most important capabilities
+If a slide includes important implementation logic, include a short code snippet using this exact format:
 
-    [SLIDE: Technologies & Tools]
-    • Programming languages used
-    • Frameworks
-    • Libraries
-    • APIs or databases
+[CODE]
+code line
+code line
+code line
+[/CODE]
 
-    [SLIDE: System Modules]
-    Explain the major components and their responsibilities.
+Rules:
+- Maximum 8 lines
+- Only include code that exists in the repository
+- Do not fabricate code
 
-    Example format:
-    • main.py → entry point
-    • model.py → machine learning model
-    • server.js → backend API server
+Example:
 
-    [SLIDE: Data / Processing Pipeline]
-    Explain the step-by-step process of how the system works.
+[CODE]
+def evaluate(node):
+    left = evaluate(node.left)
+    right = evaluate(node.right)
+    return apply(node.op, left, right)
+[/CODE]
 
-    Examples depending on project type:
 
-    Machine Learning:
-    • Load dataset
-    • Preprocess data
-    • Train model
-    • Evaluate performance
-    • Output predictions
+WORKFLOW / PIPELINE DIAGRAM FORMAT
 
-    Web Application:
-    • User sends request
-    • Backend processes request
-    • Database query executed
-    • Response returned to user
+If a slide explains system workflow, processing flow, or data pipeline, include a diagram using this format:
 
-    [SLIDE: System Architecture]
-    Explain how modules interact and how the system is structured.
+[DIAGRAM]
+Step 1 → Step 2 → Step 3 → Step 4
+[/DIAGRAM]
 
-    [SLIDE: Deployment & Execution]
-    Explain how the system is run or deployed.
+Rules:
+- Use arrows "→"
+- Maximum 6 steps
+- Each step should be short (2–4 words)
 
-    Examples:
-    • Run using Python script
-    • Backend server deployment
-    • Docker container
-    • Cloud deployment
-    • Local execution
 
-    [SLIDE: Key Code Examples]
-    Provide 2–3 short but meaningful code snippets (maximum 10 lines each).
+SLIDE GENERATION RULES
 
-    Format:
+Generate approximately 6–8 slides describing the repository.
 
-    Code Example: <description>
+Include these core slides when possible:
+• Problem & Motivation
+• Project Overview
+• System Architecture
 
-    <code snippet>
+Additional slides should be generated based on repository structure. Possible slides include:
 
-    [SLIDE: Real World Applications]
-    Explain who would use this system and in what scenarios.
+• Key Features
+• System Workflow
+• Core Components
+• Implementation Highlights
+• Running the Project
+• Limitations or Future Improvements
 
-    Repository files:
-    {file_text}
-    """
+
+FEATURE SLIDE GUIDELINES
+
+If the repository contains multiple capabilities, group them into feature-focused slides.
+
+Example feature slide titles:
+• Feature: Expression Management
+• Feature: Evaluation Engine
+• Feature: Data Processing Pipeline
+
+
+IMPLEMENTATION DETAILS
+
+When useful:
+- include short code snippets using the [CODE] format
+- include workflow diagrams using the [DIAGRAM] format
+
+
+IMPORTANT FORMATTING RULES
+
+- Always start slides with [SLIDE: Title]
+- Use bullet points starting with "•"
+- Place [CODE] or [DIAGRAM] sections AFTER the bullet points
+- Do not include markdown formatting
+- Do not include triple backticks
+
+
+REPOSITORY FILES
+{file_text}
+"""
 
     return prompt
 
 # ------------------------------
 # Analyze repository using LLM
 # ------------------------------
-# ------------------------------
-# Analyze repository using LLM
-# ------------------------------
+
 def analyze_repository(files):
     """
     Send repository files to the LLM and return
